@@ -51,4 +51,34 @@ class ShiftController extends Controller
 
         return response()->json(['shift' => $newShift], 201);
     }
+
+    public function callNextShift(){
+        $nextShift = Shift::where('called', false) // QUERY: select * from SHIFTS where called = false order by id asc limit 1
+        ->orderByRaw('id ASC')
+        ->first();
+
+        if(!$nextShift) {
+            return response()->json(['message' => 'No pending shifts'], 200);
+        }
+
+        $nextShift->called = true;
+        $nextShift->called_at = now();
+        $nextShift->save();
+
+        return response()->json(['shift' => $nextShift->shift], 200);
+    }
+
+    public function upcomingShifts(){
+        $nextShift = DB::table('SHIFTS')
+        ->leftJoin('SERVICES', 'SHIFTS.service_id', '=', 'SERVICES.id')
+        ->where('SHIFTS.called', false)
+        ->orderBy('SHIFTS.id', 'asc')
+        ->get();
+
+        if($nextShift->isEmpty()) {
+            return response()->json(['message' => 'No upcoming shifts'], 200);
+        }
+
+        return response()->json(['upcoming_shifts' => $nextShift], 200);
+    }
 }
