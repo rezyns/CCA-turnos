@@ -52,9 +52,13 @@ class ShiftController extends Controller
         return response()->json(['shift' => $newShift], 201);
     }
 
-    public function callNextShift(){
-        $nextShift = Shift::where('called', false) // QUERY: select * from SHIFTS where called = false order by id asc limit 1
-        ->orderByRaw('id ASC')
+    public function callNextShift(string $module_id):JsonResponse
+    {
+        $nextShift = Shift::whereHas('service', function(Builder $query) use ($module_id) {
+            $query->where('module_id', $module_id);
+        })
+        ->where('called', false)
+        ->orderBy('id', 'asc')
         ->first();
 
         if(!$nextShift) {
