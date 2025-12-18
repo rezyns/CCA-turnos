@@ -9,13 +9,16 @@ export const Shift =() => {
     const [modules, setModules] = useState([]);
     const [services, setServices] = useState([]);
     const [waitingShifts, setWaitingShifts] = useState([]);
+    const [newShiftNumber, setNewShiftNumber] = useState("---");
 
     const newShift = async (data) => {
         data.preventDefault();
         const serviceId = data.target.serviceOpt.value;
         try {
             const shift = await createShift(serviceId);
-            console.log("New shift created:", shift);
+            
+            console.log("New shift created:", shift.shift);
+            setNewShiftNumber(shift.shift);
         } catch (error) {
             console.error("Error creating new shift:", error);
         }
@@ -48,7 +51,9 @@ export const Shift =() => {
                 const data = await getWaitingShifts();
                 setWaitingShifts(data);
                 let waitingNumber = data.length;
+                setNewShiftNumber(data[waitingNumber - 1].shift);
                 console.log("Number of waiting shifts:", waitingNumber);
+                console.log("Waiting shifts data:", data);
             } catch (error) {
                 console.error("Error fetching waiting shifts:", error);
             }
@@ -85,19 +90,19 @@ export const Shift =() => {
                                     </option>
                                 ))}
                             </select>
+
                             <button type="submit" className="bg-[#20C05C] w-max p-3 rounded-lg text-black font-bold mt-5 cursor-pointer">Generar </button>
+                            <button className="bg-[#007bff] w-max p-3 rounded-lg text-black font-bold mt-5 cursor-pointer"> Llamar siguiente </button>
                         </form>
                         <div className="col-span-1 bg-neutral-800 rounded-md p-5">
-                            <h3 className="font-bold text-2xl mb-5"> Turno generado: </h3>
+                            <h3 className="font-bold text-xl mb-5">Ultimo turno generado: </h3>
                             <div className="bg-neutral-900 p-5 rounded-md w-max">
-                                <p className="text-xl"> Modulo: <span className="font-bold"> A </span> </p>
-                                <p className="text-xl"> Servicio: <span className="font-bold"> Consulta general </span> </p>
-                                <p className="text-xl"> Numero de turno: <span className="font-bold text-3xl"> 001 </span> </p>
+                                <span className="font-bold text-3xl"> {newShiftNumber} </span>
                             </div>
                         </div>
                     </div>
                     <div className="w-full bg-neutral-800 p-5 rounded-md">
-                        <p>Turnos pendientes: {waitingShifts.length}</p>
+                        <p> <button className="hover:underline cursor-pointer"> Ver Turnos pendientes </button>  ({waitingShifts.length})</p>
                     </div>
                         
                     </div>
