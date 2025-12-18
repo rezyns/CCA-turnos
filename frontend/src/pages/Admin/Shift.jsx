@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { HeaderComponent } from "./components/IU/HeaderComponent";
 import {NavbarComponent } from "./components/IU/NavbarComponent.jsx";
 import { getModules, getServices, getWaitingShifts, createShift } from "../../services/api.jsx";
-import { data } from "react-router";
-
 
 export const Shift =() => {
 
