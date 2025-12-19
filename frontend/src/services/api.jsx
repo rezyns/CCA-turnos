@@ -45,7 +45,12 @@ export const getWaitingShifts = async () =>{
         }
 
         const data = await response.json();
-        console.log(data);
+        console.log('waiting-shifts data:', data);
+
+        if (!data.upcoming_shifts) {
+            return [];
+        }
+
         return data.upcoming_shifts;
     } catch (error) {
         console.error('There has been a problem with your fetch operation:', error);
@@ -74,3 +79,26 @@ export const createShift = async (serviceId) => {
         throw error;
     }
 };
+
+
+export const callNextShift = async (moduleId) => {  
+    try {
+        const response = await fetch(`${apiUrl}/shifts/call-next/${moduleId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        throw error;
+    }
+}

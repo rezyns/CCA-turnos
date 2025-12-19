@@ -2,14 +2,14 @@ import BgPages from "./components/IU/BgPages";
 import { useState, useEffect } from "react";
 import { HeaderComponent } from "./components/IU/HeaderComponent";
 import {NavbarComponent } from "./components/IU/NavbarComponent.jsx";
-import { getModules, getServices, getWaitingShifts, createShift } from "../../services/api.jsx";
+import { getModules, getServices, getWaitingShifts, createShift , callNextShift} from "../../services/api.jsx";
 
 export const Shift =() => {
 
     const [modules, setModules] = useState([]);
     const [services, setServices] = useState([]);
-    const [waitingShifts, setWaitingShifts] = useState([]);
     const [newShiftNumber, setNewShiftNumber] = useState("---");
+    const [waitingShiftsCount, setWaitingShiftsCount] = useState(0);
 
     const newShift = async (data) => {
         data.preventDefault();
@@ -19,10 +19,31 @@ export const Shift =() => {
             
             console.log("New shift created:", shift.shift);
             setNewShiftNumber(shift.shift);
+            
+            const updatedWaitingShifts = await getWaitingShifts();
+            setWaitingShiftsCount(updatedWaitingShifts.length);
         } catch (error) {
             console.error("Error creating new shift:", error);
         }
     }
+
+
+    const nextShift = async (data) => {
+        console.log(data)
+        data.preventDefault();
+
+        const moduleId = data.target.moduleOpt.value;
+
+        const nextShift = await callNextShift(moduleId);
+
+        if (nextShift.message) {
+            alert('No hay turnos en espera para su modulo.');
+        } else {
+            const updatedWaitingShifts = await getWaitingShifts();
+            setWaitingShiftsCount(updatedWaitingShifts.length);
+        }
+    }
+    
 
     useEffect(() => {
         // Fetch modules from API
@@ -49,9 +70,9 @@ export const Shift =() => {
         const fetchWaitingShifts = async () => {
             try {
                 const data = await getWaitingShifts();
-                setWaitingShifts(data);
                 let waitingNumber = data.length;
                 setNewShiftNumber(data[waitingNumber - 1].shift);
+                setWaitingShiftsCount(waitingNumber);
                 console.log("Number of waiting shifts:", waitingNumber);
                 console.log("Waiting shifts data:", data);
             } catch (error) {
@@ -71,17 +92,22 @@ export const Shift =() => {
                 <NavbarComponent/>
                 <div className="m-auto h-max w-11/12 lg:w-3/4 rounded-md lg:mt-16  shadow-lg">
                 <div className="text-white">
-                    <h2 className="font-bold text-3xl"> Turnos </h2>
-                    <div className="grid grid-cols-3 gap-5 mt-5 mb-5">
-                        <form onSubmit={newShift} className="bg-neutral-800 py-5 flex flex-col gap-3 rounded-md  px-8 col-span-2">
-                            {/* <label htmlFor=""> Selecione su modulo: </label>
-                            <select name="" id="" className="lg:w-1/2 p-1 rounded-sm border text-white bg-neutral-700">
+                    <div className=" h-max flex items-center gap-5 w-full">
+                        <h2 className="font-bold text-3xl"> Turnos </h2>
+                        <form onSubmit={nextShift} className="flex items-center gap-5 ml-auto bg-neutral-800 p-2 rounded-md">
+                            <label htmlFor="moduleOpt"> Selecione su modulo: </label>
+                            <select name="moduleOpt" className="lg:w-1/2 h-max p-1 rounded-sm border text-white bg-neutral-700">
                                 {modules.map((module) => (
                                     <option key={module.id} value={module.id}>
                                         {module.name}
                                     </option>
                                 ))}
-                            </select> */}
+                            </select>
+                            <button type="submit" className="bg-[#007bff] w-max p-1 rounded-lg text-black font-bold cursor-pointer"> Llamar siguiente </button>
+                        </form>
+                    </div>
+                    <div className="grid grid-cols-3 gap-5 mt-5 mb-5">
+                        <form onSubmit={newShift} className="bg-neutral-800 py-5 flex flex-col gap-3 rounded-md  px-8 col-span-2">
                             <label htmlFor="serviceOpt"> Selecione el servicio: </label>
                             <select name="serviceOpt" className="lg:w-1/2 p-1 rounded-sm border text-white bg-neutral-700"> 
                                 {services.map((service) => (
@@ -90,9 +116,7 @@ export const Shift =() => {
                                     </option>
                                 ))}
                             </select>
-
                             <button type="submit" className="bg-[#20C05C] w-max p-3 rounded-lg text-black font-bold mt-5 cursor-pointer">Generar </button>
-                            <button className="bg-[#007bff] w-max p-3 rounded-lg text-black font-bold mt-5 cursor-pointer"> Llamar siguiente </button>
                         </form>
                         <div className="col-span-1 bg-neutral-800 rounded-md p-5">
                             <h3 className="font-bold text-xl mb-5">Ultimo turno generado: </h3>
@@ -102,7 +126,7 @@ export const Shift =() => {
                         </div>
                     </div>
                     <div className="w-full bg-neutral-800 p-5 rounded-md">
-                        <p> <button className="hover:underline cursor-pointer"> Ver Turnos pendientes </button>  ({waitingShifts.length})</p>
+                        <p> <button className="hover:underline cursor-pointer"> Ver Turnos pendientes </button>  ({waitingShiftsCount})</p>
                     </div>
                         
                     </div>
