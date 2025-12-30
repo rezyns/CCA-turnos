@@ -4,7 +4,7 @@ import { HeaderComponent } from "./components/IU/HeaderComponent";
 import{ NavbarComponent }from "./components/IU/NavbarComponent.jsx";
 import {TableComponent} from "./components/IU/TableComponent.jsx";
 import { getServices}  from "../../services/api.jsx";
-
+import { CreateServiceCard } from "./components/IU/CardCreateComponent.jsx";
 
 export const Services = () => {
 
@@ -26,6 +26,7 @@ export const Services = () => {
   return (
     <>
         <BgPages/>
+        <CreateServiceCard />
         <div className="w-full h-dvh bg-transparent  ">
             <HeaderComponent/>
             <NavbarComponent/>

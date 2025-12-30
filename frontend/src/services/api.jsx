@@ -102,3 +102,29 @@ export const callNextShift = async (moduleId) => {
         throw error;
     }
 }
+
+export const createService = async (serviceData) => {
+    try {
+        const response = await fetch(`${apiUrl}/services`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: serviceData.name,
+                word: serviceData.letter,
+                module_id: serviceData.module_id
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        
+    }
+}
