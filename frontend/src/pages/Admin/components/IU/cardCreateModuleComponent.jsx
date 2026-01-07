@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { getModules } from "../../../../services/api"; 
-import { createService } from "../../../../services/api";
+import { createModule } from "../../../../services/api";
 
-export const CreateServiceCard = () => {
+export const CreateModuleCard = () => {
 
     const [modules, setModules] = useState([]);
 
@@ -25,24 +24,23 @@ export const CreateServiceCard = () => {
         e.preventDefault();
 
         const formData = {
-            name: e.target.nameService.value,
-            letter: e.target.serviceLetter.value,
-            module_id: e.target.moduleId.value
+            name: e.target.nameModule.value,
+            role: e.target.moduleRole.value
         };
 
         const submitService = async () => {
             try {
-                const response = await createService(formData);
+                const response = await createModule(formData);
 
                 if (!response) {
-                    throw new Error("Error creating service");
+                    throw new Error("Error creating modulo");
                 }
 
-                alert("Servicio creado con éxito");
+                alert("Modulo creado con éxito");
                 window.location.reload();
             } catch (error) {
                 console.error("Error creating service:", error);
-                alert("Error al crear el servicio");
+                alert("Error al crear el modulo");
             }
         }
 
@@ -63,18 +61,12 @@ export const CreateServiceCard = () => {
                         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                     <form action="" onSubmit={handleSubmit}>
-                        <h2 className="text-2xl font-bold mb-4 text-black">Crear Nuevo Servicio</h2>
+                        <h2 className="text-2xl font-bold mb-4 text-black">Crear Nuevo Modulo</h2>
                         <label htmlFor=""></label>
-                        <input name="nameService" type="text" placeholder="Nombre del Servicio" className="w-full p-2 mb-4 border border-gray-300 rounded-md"/>
+                        <input name="nameModule" type="text" placeholder="Nombre del Módulo" className="w-full p-2 mb-4 border border-gray-300 rounded-md"/>
                         <label htmlFor=""></label>
-                        <input name="serviceLetter" type="text" placeholder="Letra del Servicio" className="w-full p-2 mb-4 border border-gray-300 rounded-md"/>
-                        <label htmlFor="">Módulo</label>
-                        <select name="moduleId" id="" className="w-full  p-1 rounded-sm border ">
-                            {modules.map((module) => (
-                                <option key={module.id} value={module.id} >{module.name}</option>
-                            ))}
-                        </select>
-                        <button type="submit" className="bg-blue-500 text-white mt-2 px-4 py-2 rounded-md hover:bg-blue-600">Crear Servicio</button>
+                        <input name="moduleRole" type="text" placeholder="Rol del Módulo" className="w-full p-2 mb-4 border border-gray-300 rounded-md"/>
+                        <button type="submit" className="bg-blue-500 text-white mt-2 px-4 py-2 rounded-md hover:bg-blue-600">Crear Módulo</button>
                     </form>
                 </div>
             </div>
@@ -82,4 +74,4 @@ export const CreateServiceCard = () => {
     )
 }
 
-export default CreateServiceCard;
+export default CreateModuleCard;

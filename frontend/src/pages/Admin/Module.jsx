@@ -4,6 +4,7 @@ import { HeaderComponent } from "./components/IU/HeaderComponent";
 import{ NavbarComponent }from "./components/IU/NavbarComponent.jsx";
 import {TableComponent} from "./components/IU/TableComponent.jsx";
 import  {getModules}  from "../../services/api.jsx";
+import { CreateModuleCard } from "./components/IU/cardCreateModuleComponent.jsx";
 
 export const Module = () => {
 
@@ -27,6 +28,7 @@ export const Module = () => {
   return (
     <>
         <BgPages/>
+        <CreateModuleCard />
         <div className="w-full h-dvh bg-transparent  ">
             <HeaderComponent/>
             <NavbarComponent/>
