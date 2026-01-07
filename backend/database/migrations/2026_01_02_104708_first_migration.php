@@ -23,7 +23,11 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('word')->unique();
             $table->unsignedBigInteger('module_id');
-            $table->foreign('module_id')->references('id')->on('MODULES');
+
+            $table->foreign('module_id')
+                ->references('id')
+                ->on('MODULES')
+                ->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -35,7 +39,11 @@ return new class extends Migration
             $table->boolean('called')->default(false);
             $table->dateTime('called_at')->nullable();
             $table->unsignedBigInteger('service_id');
-            $table->foreign('service_id')->references('id')->on('SERVICES');
+
+            $table->foreign('service_id')
+                ->references('id')
+                ->on('SERVICES')
+                ->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -46,8 +54,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('MODULES');
-        Schema::dropIfExists('SERVICES');
-        Schema::dropIfExists('SHIFTS');
+    Schema::dropIfExists('SHIFTS');
+    Schema::dropIfExists('SERVICES');
+    Schema::dropIfExists('MODULES');
     }
 };

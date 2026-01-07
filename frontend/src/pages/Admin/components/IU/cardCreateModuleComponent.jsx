@@ -1,24 +1,6 @@
-import { useEffect, useState } from "react";
 import { createModule } from "../../../../services/api";
 
 export const CreateModuleCard = () => {
-
-    const [modules, setModules] = useState([]);
-
-    useEffect(() => {
-        const fethModules =async () => {
-            try {
-                const response = await getModules();
-                setModules(response);
-            } catch (error) {
-                console.error("Error fetching modules:", error);
-                throw new Error(error);
-            }
-        }
-
-        fethModules()
-    },[]);
-
 
     const handleSubmit = (e) => {
         e.preventDefault();

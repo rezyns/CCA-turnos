@@ -155,3 +155,92 @@ export const createModule = async (moduleData) => {
         throw error;
     }
 }
+
+//Edit Funtions
+
+export const editModule = async (moduleId, moduleData) => {
+    try {
+        const response = await fetch(`${apiUrl}/modules/${moduleId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: moduleData.name,
+                role: moduleData.role
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        throw error;
+    }
+}
+
+export const editService = async (serviceId, serviceData) => {
+    try {
+        const response = await fetch(`${apiUrl}/services/${serviceId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: serviceData.name,
+                word: serviceData.letter,
+                module_id: serviceData.module_id
+            }),
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        throw error;
+    }
+}
+
+export const deleteModule = async (moduleId) => {
+    try {
+        const response = await fetch(`${apiUrl}/modules/${moduleId}`, {
+            method: 'DELETE',
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return true;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        throw error;
+    }
+}
+
+export const deleteService = async (serviceId) => {
+    try {
+        const response = await fetch(`${apiUrl}/services/${serviceId}`, {
+            method: 'DELETE',
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return true;
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+        throw error;
+    }
+}
