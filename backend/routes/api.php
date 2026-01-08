@@ -18,6 +18,7 @@ Route::resource('modules', ModuleController::class, [
     'modules' => 'id'
 ]);
 
+Route::get('/shifts', [ShiftController::class, 'index']);
 Route::get('/shifts/call-next/{module_id}', [ShiftController::class, 'callNextShift']);
 Route::get('/shifts/waiting-shifts', [ShiftController::class, 'upcomingShifts']);
 Route::post('/shifts/{id}', [ShiftController::class, 'addShift']); 

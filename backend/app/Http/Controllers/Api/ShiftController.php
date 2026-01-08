@@ -11,6 +11,13 @@ use Illuminate\Http\JsonResponse;
 
 class ShiftController extends Controller
 {
+
+    public function index():JsonResponse
+    {
+        $shifts = Shift::all();
+        return response()->json(['shifts' => $shifts], 200);
+    }
+
     public function addShift(string $service_id):JsonResponse
     {
         $serviceId = intval($service_id);
